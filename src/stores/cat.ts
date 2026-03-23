@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
+/** 猫咪状态 Store 接口 */
 export interface CatStore {
   model: {
     mirror: boolean
@@ -20,6 +21,10 @@ export interface CatStore {
   }
 }
 
+/**
+ * 猫咪状态管理 Store
+ * 管理猫咪模型和窗口相关的配置状态
+ */
 export const useCatStore = defineStore('cat', () => {
   /* ------------ 废弃字段（后续删除） ------------ */
 

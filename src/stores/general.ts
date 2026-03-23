@@ -6,8 +6,10 @@ import { reactive, ref } from 'vue'
 
 import { LANGUAGE } from '@/constants'
 
+/** 语言类型 */
 export type Language = typeof LANGUAGE[keyof typeof LANGUAGE]
 
+/** 通用设置 Store 接口 */
 export interface GeneralStore {
   app: {
     autostart: boolean
@@ -23,6 +25,10 @@ export interface GeneralStore {
   }
 }
 
+/**
+ * 通用设置状态管理 Store
+ * 管理应用程序的通用设置，如自启动、主题、语言等
+ */
 export const useGeneralStore = defineStore('general', () => {
   /* ------------ 废弃字段（后续删除） ------------ */
 
@@ -58,6 +64,9 @@ export const useGeneralStore = defineStore('general', () => {
     autoCheck: false,
   })
 
+  /**
+   * 获取系统语言设置
+   */
   const getLanguage = async () => {
     const locale = await getLocale<Language>()
 
@@ -68,6 +77,10 @@ export const useGeneralStore = defineStore('general', () => {
     return LANGUAGE.EN_US
   }
 
+  /**
+   * 初始化 Store
+   * 迁移旧数据并设置默认值
+   */
   const init = async () => {
     appearance.language ??= await getLanguage()
 

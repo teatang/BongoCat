@@ -11,14 +11,22 @@ import { join } from './path'
 
 import { i18n } from '@/locales'
 
+// 注册 Ticker 到 Live2DModel
 Live2DModel.registerTicker(Ticker)
 
+/**
+ * Live2D 核心类
+ * 封装了 PixiJS 与 Live2D 模型的所有交互操作
+ */
 class Live2d {
   private app: Application | null = null
   public model: Live2DModel | null = null
 
   constructor() { }
 
+  /**
+   * 初始化 PixiJS 应用
+   */
   private initApp() {
     if (this.app) return
 
@@ -32,6 +40,11 @@ class Live2d {
     })
   }
 
+  /**
+   * 加载 Live2D 模型
+   * @param path 模型目录路径
+   * @returns 模型尺寸和动作/表情数据
+   */
   public async load(path: string) {
     this.initApp()
 
@@ -73,6 +86,9 @@ class Live2d {
     }
   }
 
+  /**
+   * 销毁当前模型
+   */
   public destroy() {
     if (!this.model) return
 
@@ -81,6 +97,10 @@ class Live2d {
     this.model = null
   }
 
+  /**
+   * 调整模型大小以适应窗口
+   * @param modelSize 模型原始尺寸
+   */
   public resizeModel(modelSize: ModelSize) {
     if (!this.model) return
 
@@ -96,20 +116,36 @@ class Live2d {
     this.model.anchor.set(0.5)
   }
 
+  /**
+   * 播放动作
+   * @param group 动作组名称
+   * @param index 动作索引
+   */
   public playMotion(group: string, index: number) {
     return this.model?.motion(group, index)
   }
 
+  /**
+   * 播放表情
+   * @param index 表情索引
+   */
   public playExpressions(index: number) {
     return this.model?.expression(index)
   }
 
+  /**
+   * 获取 Core 模型实例
+   */
   public getCoreModel() {
     const internalModel = this.model?.internalModel as Cubism4InternalModel
 
     return internalModel?.coreModel
   }
 
+  /**
+   * 获取参数的范围（最小值和最大值）
+   * @param id 参数 ID
+   */
   public getParameterRange(id: string) {
     const coreModel = this.getCoreModel()
 
@@ -123,6 +159,11 @@ class Live2d {
     }
   }
 
+  /**
+   * 设置参数值
+   * @param id 参数 ID
+   * @param value 参数值
+   */
   public setParameterValue(id: string, value: number | boolean) {
     const coreModel = this.getCoreModel()
 
@@ -130,6 +171,7 @@ class Live2d {
   }
 }
 
+// 创建 Live2D 单例
 const live2d = new Live2d()
 
 export default live2d

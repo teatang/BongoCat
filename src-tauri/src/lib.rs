@@ -13,20 +13,25 @@ use tauri_plugin_custom_window::{
 };
 use utils::fs_extra::copy_dir;
 
+/// 应用程序入口点
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let app = tauri::Builder::default()
         .setup(|app| {
             let app_handle = app.handle();
 
+            // 获取主窗口（宠物窗口）
             let main_window = app.get_webview_window(MAIN_WINDOW_LABEL).unwrap();
 
+            // 获取设置窗口
             let preference_window = app.get_webview_window(PREFERENCE_WINDOW_LABEL).unwrap();
 
+            // 执行平台特定的初始化设置
             setup::default(&app_handle, main_window.clone(), preference_window.clone());
 
             Ok(())
         })
+        // 注册 Tauri 命令处理器
         .invoke_handler(generate_handler![
             copy_dir,
             start_device_listening,

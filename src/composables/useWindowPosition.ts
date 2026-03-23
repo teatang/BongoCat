@@ -5,12 +5,20 @@ import { onMounted, ref, watch } from 'vue'
 import { useCatStore } from '@/stores/cat'
 import { getCursorMonitor } from '@/utils/monitor'
 
+// 获取当前窗口实例
 const appWindow = getCurrentWebviewWindow()
 
+/**
+ * 窗口位置 Composable
+ * 负责管理窗口在屏幕上的位置（四个角落）
+ */
 export function useWindowPosition() {
   const catStore = useCatStore()
   const isMounted = ref(false)
 
+  /**
+   * 设置窗口位置到指定角落
+   */
   const setWindowPosition = async () => {
     const monitor = await getCursorMonitor()
 

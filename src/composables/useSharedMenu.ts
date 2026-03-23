@@ -6,10 +6,17 @@ import { showWindow } from '@/plugins/window'
 import { useCatStore } from '@/stores/cat'
 import { isMac } from '@/utils/platform'
 
+/**
+ * 共享菜单 Composable
+ * 生成系统托盘和菜单中共享的菜单项
+ */
 export function useSharedMenu() {
   const catStore = useCatStore()
   const { t } = useI18n()
 
+  /**
+   * 获取缩放比例菜单项
+   */
   const getScaleMenuItems = async () => {
     const options = range(50, 151, 25)
 
@@ -34,6 +41,9 @@ export function useSharedMenu() {
     return Promise.all(items)
   }
 
+  /**
+   * 获取透明度菜单项
+   */
   const getOpacityMenuItems = async () => {
     const options = range(25, 101, 25)
 
@@ -58,6 +68,9 @@ export function useSharedMenu() {
     return Promise.all(items)
   }
 
+  /**
+   * 获取完整的共享菜单
+   */
   const getSharedMenu = async () => {
     return await Promise.all([
       MenuItem.new({

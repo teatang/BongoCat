@@ -8,6 +8,12 @@ import {
 } from '@tauri-apps/plugin-global-shortcut'
 import { ref, watch } from 'vue'
 
+/**
+ * 全局快捷键 Composable
+ * 简化全局快捷键的注册和注销
+ * @param shortcut 快捷键字符串的响应式引用
+ * @param callback 快捷键触发时的回调函数
+ */
 export function useTauriShortcut(shortcut: Ref<string, string>, callback: ShortcutHandler) {
   const oldShortcut = ref(shortcut.value)
 

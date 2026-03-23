@@ -8,11 +8,17 @@ import { onMounted, ref } from 'vue'
 
 import { useAppStore } from '@/stores/app'
 
+/** 窗口状态类型 */
 export type WindowState = Record<string, Partial<PhysicalPosition & PhysicalSize> | undefined>
 
+// 获取当前窗口实例
 const appWindow = getCurrentWebviewWindow()
 const { label } = appWindow
 
+/**
+ * 窗口状态 Composable
+ * 负责监听和保存窗口的位置与大小状态
+ */
 export function useWindowState() {
   const appStore = useAppStore()
   const isRestored = ref(false)
@@ -23,6 +29,9 @@ export function useWindowState() {
     appWindow.onResized(onChange)
   })
 
+  /**
+   * 窗口位置或大小变化时的回调
+   */
   const onChange = async (event: Event<PhysicalPosition | PhysicalSize>) => {
     const minimized = await appWindow.isMinimized()
 
@@ -33,6 +42,9 @@ export function useWindowState() {
     Object.assign(appStore.windowState[label], event.payload)
   }
 
+  /**
+   * 恢复窗口状态到之前保存的位置和大小
+   */
   const restoreState = async () => {
     const { x, y, width, height } = appStore.windowState[label] ?? {}
 

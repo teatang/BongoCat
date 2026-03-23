@@ -14,18 +14,27 @@ import { useCatStore } from '@/stores/cat'
 import { useModelStore } from '@/stores/model'
 import { getCursorMonitor } from '@/utils/monitor'
 
+// 获取当前窗口实例
 const appWindow = getCurrentWebviewWindow()
 
+/** 模型尺寸接口 */
 export interface ModelSize {
   width: number
   height: number
 }
 
+/**
+ * 模型操作 Composable
+ * 负责 Live2D 模型的加载、销毁、调整大小以及按键/鼠标/手柄事件处理
+ */
 export function useModel() {
   const modelStore = useModelStore()
   const catStore = useCatStore()
   const modelSize = ref<ModelSize>()
 
+  /**
+   * 加载 Live2D 模型
+   */
   async function handleLoad() {
     try {
       if (!modelStore.currentModel) return
@@ -46,10 +55,16 @@ export function useModel() {
     }
   }
 
+  /**
+   * 销毁当前模型
+   */
   function handleDestroy() {
     live2d.destroy()
   }
 
+  /**
+   * 调整模型大小以适应窗口
+   */
   async function handleResize() {
     if (!modelSize.value) return
 
@@ -71,6 +86,9 @@ export function useModel() {
     catStore.window.scale = round((size.width / width) * 100)
   }
 
+  /**
+   * 处理按键按下事件
+   */
   const handlePress = (key: string) => {
     const path = modelStore.supportKeys[key]
 
@@ -91,22 +109,40 @@ export function useModel() {
     modelStore.pressedKeys[key] = path
   }
 
+  /**
+   * 处理按键释放事件
+   */
   const handleRelease = (key: string) => {
     delete modelStore.pressedKeys[key]
   }
 
+  /**
+   * 处理键盘按键变化（左右手）
+   * @param isLeft 是否为左手按键
+   * @param pressed 是否按下
+   */
   function handleKeyChange(isLeft = true, pressed = true) {
     const id = isLeft ? 'CatParamLeftHandDown' : 'CatParamRightHandDown'
 
     live2d.setParameterValue(id, pressed)
   }
 
+  /**
+   * 处理鼠标按键变化
+   * @param key 鼠标按键（左/右）
+   * @param pressed 是否按下
+   */
   function handleMouseChange(key: string, pressed = true) {
     const id = key === 'Left' ? 'ParamMouseLeftDown' : 'ParamMouseRightDown'
 
     live2d.setParameterValue(id, pressed)
   }
 
+  /**
+   * 处理鼠标移动事件
+   * 根据鼠标在屏幕上的位置更新 Live2D 模型的参数
+   * @param cursorPoint 鼠标当前坐标
+   */
   async function handleMouseMove(cursorPoint: PhysicalPosition) {
     const monitor = await getCursorMonitor(cursorPoint)
 
@@ -135,6 +171,11 @@ export function useModel() {
     }
   }
 
+  /**
+   * 处理摇杆轴变化事件
+   * @param id 参数 ID
+   * @param value 轴值
+   */
   async function handleAxisChange(id: string, value: number) {
     const { min, max } = live2d.getParameterRange(id)
 

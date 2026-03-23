@@ -4,23 +4,33 @@ use serde_json::{Value, json};
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{AppHandle, Emitter, Runtime, command};
 
+/// 设备事件类型枚举
 #[derive(Debug, Clone, Serialize)]
 pub enum DeviceEventKind {
+    /// 鼠标按下
     MousePress,
+    /// 鼠标释放
     MouseRelease,
+    /// 鼠标移动
     MouseMove,
+    /// 键盘按下
     KeyboardPress,
+    /// 键盘释放
     KeyboardRelease,
 }
 
+/// 设备事件结构体
 #[derive(Debug, Clone, Serialize)]
 pub struct DeviceEvent {
     kind: DeviceEventKind,
     value: Value,
 }
 
+/// 是否正在监听设备事件的标志
 static IS_LISTENING: AtomicBool = AtomicBool::new(false);
 
+/// 启动设备监听命令
+/// 监听系统键盘和鼠标事件并发送到前端
 #[command]
 pub async fn start_device_listening<R: Runtime>(app_handle: AppHandle<R>) -> Result<(), String> {
     if IS_LISTENING.load(Ordering::SeqCst) {

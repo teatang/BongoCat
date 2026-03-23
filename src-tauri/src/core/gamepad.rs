@@ -3,14 +3,19 @@ use serde::Serialize;
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{AppHandle, Emitter, Runtime, command};
 
+/// 是否正在监听手柄事件的标志
 static IS_LISTENING: AtomicBool = AtomicBool::new(false);
 
+/// 手柄事件类型枚举
 #[derive(Debug, Clone, Serialize)]
 pub enum GamepadEventKind {
+    /// 按键变化
     ButtonChanged,
+    /// 摇杆轴变化
     AxisChanged,
 }
 
+/// 手柄事件结构体
 #[derive(Debug, Clone, Serialize)]
 pub struct GamepadEvent {
     kind: GamepadEventKind,
@@ -18,6 +23,8 @@ pub struct GamepadEvent {
     value: f32,
 }
 
+/// 启动手柄监听命令
+/// 监听游戏手柄的按键和摇杆事件并发送到前端
 #[command]
 pub async fn start_gamepad_listing<R: Runtime>(app_handle: AppHandle<R>) -> Result<(), String> {
     if IS_LISTENING.load(Ordering::SeqCst) {
@@ -51,6 +58,7 @@ pub async fn start_gamepad_listing<R: Runtime>(app_handle: AppHandle<R>) -> Resu
     Ok(())
 }
 
+/// 停止手柄监听命令
 #[command]
 pub async fn stop_gamepad_listing() {
     if !IS_LISTENING.load(Ordering::SeqCst) {

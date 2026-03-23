@@ -20,22 +20,32 @@ import { useSharedMenu } from './useSharedMenu'
 import { useCatStore } from '@/stores/cat'
 import { useGeneralStore } from '@/stores/general'
 
+/** 系统托盘图标 ID */
 const TRAY_ID = 'BONGO_CAT_TRAY'
 
+/**
+ * 系统托盘 Composable
+ * 负责创建和管理系统托盘图标及菜单
+ */
 export function useTray() {
   const catStore = useCatStore()
   const generalStore = useGeneralStore()
   const { getSharedMenu } = useSharedMenu()
   const { t } = useI18n()
 
+  // 监听窗口可见性、穿透、语言变化，更新托盘菜单
   watch([() => catStore.window.visible, () => catStore.window.passThrough, () => generalStore.appearance.language], () => {
     updateTrayMenu()
   })
 
+  // 防抖监听窗口缩放和透明度变化
   watchDebounced([() => catStore.window.scale, () => catStore.window.opacity], () => {
     updateTrayMenu()
   }, { debounce: 200 })
 
+  /**
+   * 创建系统托盘图标
+   */
   const createTray = async () => {
     const tray = await getTrayById()
 
@@ -61,10 +71,16 @@ export function useTray() {
     return TrayIcon.new(options)
   }
 
+  /**
+   * 根据 ID 获取托盘图标实例
+   */
   const getTrayById = () => {
     return TrayIcon.getById(TRAY_ID)
   }
 
+  /**
+   * 获取托盘菜单配置
+   */
   const getTrayMenu = async () => {
     const appVersion = await getVersion()
 
@@ -102,6 +118,9 @@ export function useTray() {
     return Menu.new({ items })
   }
 
+  /**
+   * 更新托盘菜单
+   */
   const updateTrayMenu = async () => {
     const tray = await getTrayById()
 

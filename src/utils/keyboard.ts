@@ -1,11 +1,13 @@
 import { isMac } from './platform'
 
+/** 键盘按键接口 */
 export interface Key {
   eventKey: string
   tauriKey?: string
   symbol?: string
 }
 
+/** 修饰键（Shift、Control、Alt、Command）列表 */
 export const modifierKeys: Key[] = [
   {
     eventKey: 'Shift',
@@ -27,6 +29,7 @@ export const modifierKeys: Key[] = [
   return { ...item, tauriKey: item.eventKey }
 })
 
+/** 标准键盘按键列表 */
 export const standardKeys: Key[] = [
   // 第一排
   {

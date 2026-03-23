@@ -1,9 +1,17 @@
 import { theme } from 'ant-design-vue'
 import { kebabCase } from 'es-toolkit'
 
+/**
+ * 主题变量 Composable
+ * 生成 Ant Design Vue 主题的 CSS 变量
+ */
 export function useThemeVars() {
   const { defaultAlgorithm, darkAlgorithm, defaultConfig } = theme
 
+  /**
+   * 生成颜色主题变量
+   * 将 Ant Design 的主题配置转换为 CSS 变量
+   */
   const generateColorVars = () => {
     const { token } = defaultConfig
 

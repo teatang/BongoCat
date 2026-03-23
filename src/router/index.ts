@@ -5,6 +5,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Main from '../pages/main/index.vue'
 import Preference from '../pages/preference/index.vue'
 
+/** 路由配置 */
 const routes: Readonly<RouteRecordRaw[]> = [
   {
     path: '/',
@@ -16,6 +17,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
   },
 ]
 
+/** 创建路由实例 */
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
